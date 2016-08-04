@@ -691,16 +691,12 @@ static int mdss_dsi_panel_apply_display_setting(struct mdss_panel_data *pdata,
 	case RGB_GAIN:
 		gain = ctrl->rgb_gain;
 
-		pr_debug("%s: RGB GAIN (%d, %d, %d)\n",
+
+		pr_info("%s: RGB GAIN (%d, %d, %d)\n",
 			__func__, gain.R, gain.G, gain.B);
 
-		if (!gain.R && !gain.G && !gain.B) {
-			pr_debug("%s: Zero RGB gain data\n", __func__);
-			return 0;
-		} else if (!gain.R || !gain.G || !gain.B) {
-			pr_warn("%s: Invalid RGB gain data\n", __func__);
+		if (!gain.R || !gain.G || !gain.B)
 			return -EINVAL;
-		}
 
 		if (mode & DISPLAY_RGB_GAIN_MASK) {
 			// Apply display settings for RGB gain
@@ -2641,9 +2637,6 @@ static int mdss_panel_parse_dt(struct device_node *np,
 	rc = of_property_read_u32(np, "qcom,mdss-dsi-bl-max-level", &tmp);
 	pinfo->bl_max = (!rc ? tmp : 255);
 	ctrl_pdata->bklt_max = pinfo->bl_max;
-	rc = of_property_read_u32(np, "htc,mdss-dsi-bl-dim-check", &tmp);
-	pinfo->bl_dim_check = (!rc ? tmp : 0);
-	pinfo->bl_dim_status = false;
 
 	rc = of_property_read_u32(np, "qcom,mdss-dsi-interleave-mode", &tmp);
 	pinfo->mipi.interleave_mode = (!rc ? tmp : 0);
